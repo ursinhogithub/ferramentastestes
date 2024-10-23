@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferramenta - Cadastro</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 2rem;
+            text-align: center;
+        }
+        .section {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        input {
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            transition: border 0.3s;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .output {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f8f9fa;
+            display: none;
+            white-space: pre-wrap;
+            color: #333;
+            font-family: monospace;
+        }
+        .copy-btn {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+            font-size: 1rem;
+            width: 100%;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Ferramenta do Cadastro</h1>
+
+<div class="section">
+    <h2>Informar Valor</h2>
+    <input type="text" id="numberInput" placeholder="Digite números aqui">
+    <button onclick="formatNumber()">Formatar</button>
+    <div class="output" id="numberOutput"></div>
+    <button class="copy-btn" id="copyNumberButton" onclick="copyNumberToClipboard()">Copiar Número</button>
+</div>
+
+<div class="section">
+    <h2>Anotações</h2>
+    <input type="text" id="employeeNameInput" placeholder="Nome do(a) solicitante">
+    <button onclick="generateMessage('cadastrado')">Cadastrado</button>
+    <button onclick="generateMessage('atualizado')">Atualizado</button>
+    <button onclick="generateDocumentRequest()">Solicitar Documentos</button>
+    <div class="output" id="messageOutput"></div>
+    <button class="copy-btn" id="copyMessageButton" onclick="copyMessageToClipboard()">Copiar Mensagem</button>
+</div>
+
+<script>
+    function formatNumber() {
+        const numberInput = document.getElementById('numberInput').value;
+        const formattedNumber = numberInput.replace(/\D/g, '');
+        const numberOutput = document.getElementById('numberOutput');
+        const copyNumberButton = document.getElementById('copyNumberButton');
+
+        numberOutput.innerText = formattedNumber;
+        numberOutput.style.display = 'block';
+        copyNumberButton.style.display = 'inline-block';
+    }
+
+    function copyNumberToClipboard() {
+        const numberOutputText = document.getElementById('numberOutput').innerText;
+        navigator.clipboard.writeText(numberOutputText);
+    }
+
+    function getGreeting() {
+        const hour = new Date().getHours();
+        if (hour < 12) {
+            return 'Bom dia';
+        } else if (hour < 18) {
+            return 'Boa tarde';
+        } else {
+            return 'Boa noite';
+        }
+    }
+
+    function getFarewell() {
+        const hour = new Date().getHours();
+        if (hour < 12) {
+            return 'Tenha um ótimo dia!';
+        } else if (hour < 18) {
+            return 'Aproveite sua tarde!';
+        } else {
+            return 'Tenha uma boa noite!';
+        }
+    }
+
+    function generateMessage(type) {
+        const employeeName = document.getElementById('employeeNameInput').value || 'Funcionário';
+        const messageOutput = document.getElementById('messageOutput');
+        const copyMessageButton = document.getElementById('copyMessageButton');
+
+        let message = `${getGreeting()}, ${employeeName};\n\n`;
+        if (type === 'cadastrado') {
+            message += 'O cadastro foi realizado com sucesso!';
+        } else if (type === 'atualizado') {
+            message += 'O cadastro foi atualizado com sucesso!';
+        }
+        message += `\n\n${getFarewell()}`;
+        
+        messageOutput.innerText = message;
+        messageOutput.style.display = 'block';
+        copyMessageButton.style.display = 'inline-block';
+    }
+
+    function generateDocumentRequest() {
+        const employeeName = document.getElementById('employeeNameInput').value || 'Funcionário';
+        const messageOutput = document.getElementById('messageOutput');
+        const copyMessageButton = document.getElementById('copyMessageButton');
+
+        const message = `${getGreeting()}, ${employeeName};\n\n` +
+            'Para atualizarmos o cadastro após a mudança de cidade, precisamos que você nos envie os seguintes documentos:\n' +
+            '- Documento pessoal com foto;\n' +
+            '- Contrato social ou alteração de endereço atualizados.\n' +
+            `\n${getFarewell()}`;
+        
+        messageOutput.innerText = message;
+        messageOutput.style.display = 'block';
+        copyMessageButton.style.display = 'inline-block';
+    }
+
+    function copyMessageToClipboard() {
+        const messageOutputText = document.getElementById('messageOutput').innerText;
+        navigator.clipboard.writeText(messageOutputText);
+    }
+</script>
+
+</body>
+</html>
